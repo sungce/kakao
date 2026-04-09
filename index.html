@@ -3,76 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Talk</title>
+    <title>Quick Talk - No Image</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .kakao-btn {
+            background-color: #FEE500;
+            line-height: 1.2;
+        }
+    </style>
 </head>
-<body class="bg-yellow-50 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-sm bg-white shadow-2xl rounded-3xl p-6 border-4 border-yellow-400">
-        <h1 class="text-2xl font-black text-center mb-6 text-gray-800 tracking-tighter">QUICK KAKAO ⚡</h1>
+    <div class="w-full max-w-xs bg-white shadow-xl rounded-3xl p-6 border border-gray-100">
+        <h1 class="text-xl font-black text-center mb-8 text-gray-800 tracking-tight">메시지 전송</h1>
 
-        <div class="space-y-4">
-            <!-- 입력창 -->
+        <div class="space-y-5">
+            <!-- 제목 입력 -->
             <div>
-                <label class="text-xs font-bold text-gray-400 ml-1">메시지 제목</label>
-                <input type="text" id="title" placeholder="예: 공지사항입니다" 
-                    class="w-full bg-gray-100 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-yellow-400 outline-none font-bold">
+                <label class="text-[11px] font-bold text-gray-400 ml-1 uppercase">제목</label>
+                <input type="text" id="title" placeholder="제목을 입력하세요" 
+                    class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-yellow-400 outline-none font-bold text-sm">
             </div>
 
+            <!-- 내용 입력 -->
             <div>
-                <label class="text-xs font-bold text-gray-400 ml-1">상세 내용</label>
-                <textarea id="desc" placeholder="보낼 내용을 입력하세요" rows="5"
-                    class="w-full bg-gray-100 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-yellow-400 outline-none"></textarea>
+                <label class="text-[11px] font-bold text-gray-400 ml-1 uppercase">전송 내용</label>
+                <textarea id="desc" placeholder="보낼 내용을 입력하세요" rows="6"
+                    class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-yellow-400 outline-none text-sm"></textarea>
             </div>
 
-            <!-- 버튼 -->
+            <!-- 버튼 (이미지 요청대로 두 줄 구성) -->
             <button onclick="send()" 
-                class="w-full bg-[#FEE500] hover:bg-yellow-400 text-gray-900 font-black py-5 rounded-2xl text-xl transition-transform active:scale-95 shadow-lg">
-                친구 선택하기 (10명씩)
+                class="kakao-btn w-full text-[#3C3E3F] font-bold py-4 rounded-2xl text-lg transition-transform active:scale-95 shadow-md">
+                카톡 친구 선택<br>
+                <span class="text-base">(최대 10명)</span>
             </button>
 
-            <p class="text-[10px] text-center text-gray-400 mt-4">
-                * 한 번에 최대 10명까지 선택 가능합니다.<br>
-                * 전송 후 다시 버튼을 눌러 다음 사람들에게 보낼 수 있습니다.
+            <p class="text-[10px] text-center text-gray-400 mt-4 leading-relaxed">
+                이미지 없이 텍스트만 전송됩니다.<br>
+                확인 버튼을 누르면 친구 선택 창이 뜹니다.
             </p>
         </div>
     </div>
 
     <script>
-        // 카카오 초기화 (제공해주신 키 적용)
-        Kakao.init('7bbaa2166711a20e94677d8ed098b216');
+        // 카카오 초기화
+        const KAKAO_KEY = '7bbaa2166711a20e94677d8ed098b216';
+        if (!Kakao.isInitialized()) Kakao.init(KAKAO_KEY);
 
         function send() {
             const title = document.getElementById('title').value;
             const desc = document.getElementById('desc').value;
 
             if (!title || !desc) {
-                alert('내용을 입력해주세요!');
+                alert('제목과 내용을 모두 입력해주세요!');
                 return;
             }
 
-            // 가장 심플한 텍스트 중심 피드형 전송
+            // 텍스트형 메시지 전송 (이미지가 포함되지 않는 형식)
             Kakao.Share.sendDefault({
-                objectType: 'feed',
-                content: {
-                    title: title,
-                    description: desc,
-                    imageUrl: 'https://cdn-icons-png.flaticon.com/512/2111/2111466.png', // 카톡 아이콘
-                    link: {
-                        mobileWebUrl: window.location.href,
-                        webUrl: window.location.href,
-                    },
+                objectType: 'text',
+                text: `[${title}]\n${desc}`,
+                link: {
+                    mobileWebUrl: window.location.href,
+                    webUrl: window.location.href,
                 },
-                buttons: [
-                    {
-                        title: '내용 확인하기',
-                        link: {
-                            mobileWebUrl: window.location.href,
-                            webUrl: window.location.href,
-                        },
-                    },
-                ],
+                buttonTitle: '내용 확인',
             });
         }
     </script>
