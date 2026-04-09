@@ -5,15 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TalkSender Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 아이콘 및 폰트 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js" crossorigin="anonymous"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap');
-        body { 
-            font-family: 'Pretendard', sans-serif; 
-            background: #f8f9fa;
-        }
+        body { font-family: 'Pretendard', sans-serif; background: #f8f9fa; }
         .glass-card {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
@@ -22,78 +18,55 @@
         }
         .send-btn {
             background: #FEE500;
-            line-height: 1.2;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
         }
-        .send-btn:hover {
-            background: #fada00;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(254, 229, 0, 0.3);
-        }
+        .send-btn:hover { background: #fada00; transform: translateY(-2px); }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-6">
 
     <div class="w-full max-w-sm">
-        <!-- 기본 헤더 (유지) -->
+        <!-- 기본 헤더 유지 -->
         <div class="text-center mb-10">
             <div class="inline-block p-3 bg-white rounded-2xl shadow-sm mb-4">
                 <i class="fa-solid fa-paper-plane text-2xl text-yellow-500"></i>
             </div>
-            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">메시지 전송<span class="text-yellow-500"> 카카오톡</span></h1>
-           
+            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">TalkSender <span class="text-yellow-500">Pro</span></h1>
+            <p class="text-slate-400 mt-2 font-light">오직 메시지만 전송합니다</p>
         </div>
 
-        <!-- 메인 카드 -->
         <div class="glass-card rounded-[2.5rem] p-8">
             <div class="space-y-6">
-                <!-- 내용 입력창 -->
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-400 mb-2 ml-1 uppercase tracking-widest">Message Content</label>
-                    <textarea id="desc" placeholder="전송할 내용을 입력하세요..." rows="8"
-                        class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 outline-none text-slate-700 font-medium placeholder:text-slate-300 focus:ring-2 focus:ring-yellow-400 transition-all leading-relaxed"></textarea>
-                </div>
+                <textarea id="desc" placeholder="보낼 내용을 입력하세요..." rows="10"
+                    class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 outline-none text-slate-700 font-medium placeholder:text-slate-300 focus:ring-2 focus:ring-yellow-400 transition-all leading-relaxed"></textarea>
 
-                <!-- 발송 버튼 (두 줄 스타일) -->
                 <button onclick="send()" class="send-btn w-full py-5 rounded-2xl text-slate-800 font-extrabold shadow-md">
-                    <div class="text-lg text-[#3C3E3F]">카톡 친구 선택</div>
-                    <div class="text-sm text-[#3C3E3F] opacity-70 font-bold">(최대 10명)</div>
+                    <div class="text-lg">카톡 친구 선택</div>
+                    <div class="text-sm opacity-60">(최대 10명)</div>
                 </button>
             </div>
         </div>
-
-        <footer class="mt-12 text-center text-slate-300 text-[10px] tracking-widest font-medium uppercase">
-            Powered by Sungce GitHub
-        </footer>
     </div>
 
     <script>
-        // 카카오 초기화
         const KAKAO_KEY = '7bbaa2166711a20e94677d8ed098b216';
-        const PAGE_URL = 'https://sungce.github.io/kakao/';
+        const PAGE_URL = 'https://sungce.github.io/kakao/'; // 카카오가 요구하는 필수 링크
 
-        if (!Kakao.isInitialized()) {
-            Kakao.init(KAKAO_KEY);
-        }
+        if (!Kakao.isInitialized()) Kakao.init(KAKAO_KEY);
 
         function send() {
             const desc = document.getElementById('desc').value;
+            if (!desc) return alert('내용을 입력해주세요.');
 
-            if (!desc) {
-                alert('내용을 입력해 주세요.');
-                return;
-            }
-
-            // 카카오톡 전송 설정
+            // 버튼(buttons) 속성을 아예 제외하여 전송
             Kakao.Share.sendDefault({
                 objectType: 'text',
                 text: desc,
                 link: {
                     mobileWebUrl: PAGE_URL,
                     webUrl: PAGE_URL,
-                },
-                // buttons 항목을 아예 작성하지 않거나 빈 배열로 두면 
-                // 메시지 하단의 '확인하기' 버튼이 나타나지 않습니다.
+                }
+                // buttons: [] 를 넣지 않으면 하단 버튼이 생성되지 않습니다.
             });
         }
     </script>
