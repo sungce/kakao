@@ -3,175 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TalkSender PRO - 대량 전송 도구</title>
+    <title>Quick Talk</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js" crossorigin="anonymous"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f2f5; }
-        .kakao-yellow { background-color: #FEE500; }
-        .preview-box { background-color: #bacee0; }
-    </style>
 </head>
-<body class="pb-10">
+<body class="bg-yellow-50 flex items-center justify-center min-h-screen p-4">
 
-    <div class="max-w-xl mx-auto py-8 px-4">
-        <!-- 헤더 -->
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">TalkSender PRO 🚀</h1>
-            <span class="bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded-full font-bold">Multiple Send</span>
-        </div>
+    <div class="w-full max-w-sm bg-white shadow-2xl rounded-3xl p-6 border-4 border-yellow-400">
+        <h1 class="text-2xl font-black text-center mb-6 text-gray-800 tracking-tighter">QUICK KAKAO ⚡</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- 왼쪽: 입력 섹션 -->
-            <div class="space-y-4">
-                <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-200">
-                    <h2 class="text-sm font-bold text-gray-400 mb-4 uppercase">메시지 작성</h2>
-                    <div class="space-y-3">
-                        <input type="text" id="title" placeholder="메시지 제목" oninput="updatePreview()"
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-yellow-400 outline-none">
-                        <textarea id="description" placeholder="내용을 입력하세요" rows="4" oninput="updatePreview()"
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-yellow-400 outline-none"></textarea>
-                        <input type="text" id="imageUrl" placeholder="이미지 URL (선택)" oninput="updatePreview()"
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-yellow-400 outline-none">
-                        <input type="text" id="linkUrl" placeholder="클릭 시 이동할 링크" 
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-yellow-400 outline-none">
-                    </div>
-                    
-                    <div class="flex gap-2 mt-4">
-                        <button onclick="saveTemplate()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 rounded-lg text-sm transition">
-                            템플릿 저장
-                        </button>
-                        <button onclick="sendKakao()" class="flex-[2] kakao-yellow hover:bg-yellow-400 text-gray-900 font-bold py-2 rounded-lg text-sm transition shadow-sm">
-                            카톡 친구 선택 (최대 10명)
-                        </button>
-                    </div>
-                </div>
+        <div class="space-y-4">
+            <!-- 입력창 -->
+            <div>
+                <label class="text-xs font-bold text-gray-400 ml-1">메시지 제목</label>
+                <input type="text" id="title" placeholder="예: 공지사항입니다" 
+                    class="w-full bg-gray-100 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-yellow-400 outline-none font-bold">
             </div>
 
-            <!-- 오른쪽: 미리보기 및 저장된 목록 -->
-            <div class="space-y-6">
-                <!-- 미리보기 -->
-                <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-200">
-                    <h2 class="text-sm font-bold text-gray-400 mb-4 uppercase">실시간 미리보기</h2>
-                    <div class="preview-box p-4 rounded-lg">
-                        <div class="bg-white rounded shadow-md max-w-[200px] mx-auto overflow-hidden">
-                            <img id="prevImg" src="https://via.placeholder.com/400x200?text=No+Image" class="w-full h-24 object-cover">
-                            <div class="p-2">
-                                <p id="prevTitle" class="font-bold text-xs truncate">제목</p>
-                                <p id="prevDesc" class="text-[10px] text-gray-500 line-clamp-2 mt-1">내용이 여기 표시됩니다.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 저장된 템플릿 -->
-                <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-200">
-                    <h2 class="text-sm font-bold text-gray-400 mb-4 uppercase">저장된 템플릿</h2>
-                    <div id="templateList" class="space-y-2 max-h-48 overflow-y-auto">
-                        <!-- 템플릿 아이템이 여기 추가됨 -->
-                        <p class="text-xs text-gray-400 text-center py-4">저장된 메시지가 없습니다.</p>
-                    </div>
-                </div>
+            <div>
+                <label class="text-xs font-bold text-gray-400 ml-1">상세 내용</label>
+                <textarea id="desc" placeholder="보낼 내용을 입력하세요" rows="5"
+                    class="w-full bg-gray-100 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-yellow-400 outline-none"></textarea>
             </div>
+
+            <!-- 버튼 -->
+            <button onclick="send()" 
+                class="w-full bg-[#FEE500] hover:bg-yellow-400 text-gray-900 font-black py-5 rounded-2xl text-xl transition-transform active:scale-95 shadow-lg">
+                친구 선택하기 (10명씩)
+            </button>
+
+            <p class="text-[10px] text-center text-gray-400 mt-4">
+                * 한 번에 최대 10명까지 선택 가능합니다.<br>
+                * 전송 후 다시 버튼을 눌러 다음 사람들에게 보낼 수 있습니다.
+            </p>
         </div>
     </div>
 
     <script>
-        // 1. 초기화
-        const KAKAO_KEY = '7bbaa2166711a20e94677d8ed098b216';
-        if (!Kakao.isInitialized()) Kakao.init(KAKAO_KEY);
+        // 카카오 초기화 (제공해주신 키 적용)
+        Kakao.init('7bbaa2166711a20e94677d8ed098b216');
 
-        let templates = JSON.parse(localStorage.getItem('myTemplates') || '[]');
+        function send() {
+            const title = document.getElementById('title').value;
+            const desc = document.getElementById('desc').value;
 
-        // 2. 미리보기 업데이트
-        function updatePreview() {
-            const title = document.getElementById('title').value || '제목';
-            const desc = document.getElementById('description').value || '내용이 여기 표시됩니다.';
-            const img = document.getElementById('imageUrl').value || 'https://via.placeholder.com/400x200?text=No+Image';
-
-            document.getElementById('prevTitle').innerText = title;
-            document.getElementById('prevDesc').innerText = desc;
-            document.getElementById('prevImg').src = img;
-        }
-
-        // 3. 템플릿 저장
-        function saveTemplate() {
-            const data = {
-                id: Date.now(),
-                title: document.getElementById('title').value,
-                description: document.getElementById('description').value,
-                imageUrl: document.getElementById('imageUrl').value,
-                linkUrl: document.getElementById('linkUrl').value
-            };
-
-            if(!data.title) return alert('제목을 입력해주세요.');
-            
-            templates.unshift(data);
-            localStorage.setItem('myTemplates', JSON.stringify(templates));
-            renderTemplates();
-        }
-
-        // 4. 템플릿 삭제
-        function deleteTemplate(id) {
-            templates = templates.filter(t => t.id !== id);
-            localStorage.setItem('myTemplates', JSON.stringify(templates));
-            renderTemplates();
-        }
-
-        // 5. 템플릿 불러오기
-        function loadTemplate(id) {
-            const t = templates.find(t => t.id === id);
-            document.getElementById('title').value = t.title;
-            document.getElementById('description').value = t.description;
-            document.getElementById('imageUrl').value = t.imageUrl;
-            document.getElementById('linkUrl').value = t.linkUrl;
-            updatePreview();
-        }
-
-        // 6. 템플릿 리스트 렌더링
-        function renderTemplates() {
-            const listDiv = document.getElementById('templateList');
-            if (templates.length === 0) {
-                listDiv.innerHTML = '<p class="text-xs text-gray-400 text-center py-4">저장된 메시지가 없습니다.</p>';
+            if (!title || !desc) {
+                alert('내용을 입력해주세요!');
                 return;
             }
 
-            listDiv.innerHTML = templates.map(t => `
-                <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded border border-gray-100 transition">
-                    <div class="cursor-pointer flex-1" onclick="loadTemplate(${t.id})">
-                        <p class="text-sm font-medium text-gray-700 truncate">${t.title}</p>
-                    </div>
-                    <button onclick="deleteTemplate(${t.id})" class="text-red-400 hover:text-red-600 text-xs ml-2">삭제</button>
-                </div>
-            `).join('');
-        }
-
-        // 7. 카카오톡 전송 (멀티 피커)
-        function sendKakao() {
-            const title = document.getElementById('title').value;
-            const desc = document.getElementById('description').value;
-            const img = document.getElementById('imageUrl').value || 'https://picsum.photos/800/400';
-            const link = document.getElementById('linkUrl').value || window.location.href;
-
-            if(!title || !desc) return alert('내용을 입력해주세요.');
-
-            // Kakao.Share.sendDefault는 자동으로 친구 선택 창(Picker)을 띄웁니다.
-            // 이 창에서 사용자는 여러 명의 친구나 채팅방을 선택(최대 10명)할 수 있습니다.
+            // 가장 심플한 텍스트 중심 피드형 전송
             Kakao.Share.sendDefault({
                 objectType: 'feed',
                 content: {
                     title: title,
                     description: desc,
-                    imageUrl: img,
-                    link: { mobileWebUrl: link, webUrl: link }
+                    imageUrl: 'https://cdn-icons-png.flaticon.com/512/2111/2111466.png', // 카톡 아이콘
+                    link: {
+                        mobileWebUrl: window.location.href,
+                        webUrl: window.location.href,
+                    },
                 },
-                buttons: [{ title: '자세히 보기', link: { mobileWebUrl: link, webUrl: link } }]
+                buttons: [
+                    {
+                        title: '내용 확인하기',
+                        link: {
+                            mobileWebUrl: window.location.href,
+                            webUrl: window.location.href,
+                        },
+                    },
+                ],
             });
         }
-
-        // 초기 실행
-        renderTemplates();
     </script>
 </body>
 </html>
